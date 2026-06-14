@@ -26,7 +26,8 @@ class MatchesDatasource {
   Future<MatchModel> obtenerPorId(String id) async {
     final todos = await _obtenerPartidos();
     final partido = todos.where((p) => p.id == id).firstOrNull;
-    if (partido == null) throw ServerException('Partido no encontrado (id: $id)');
+    if (partido == null)
+      throw ServerException('Partido no encontrado (id: $id)');
     return partido;
   }
 

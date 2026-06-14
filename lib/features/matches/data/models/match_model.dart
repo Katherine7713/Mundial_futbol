@@ -15,6 +15,7 @@ class MatchModel extends MatchEntity {
     required super.fase,
     required super.fechaPartido,
   });
+
   factory MatchModel.fromJson(Map<String, dynamic> json) {
     final local = json['home_team'] as Map<String, dynamic>? ?? {};
     final visitante = json['away_team'] as Map<String, dynamic>? ?? {};

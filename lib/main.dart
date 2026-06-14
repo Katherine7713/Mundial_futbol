@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'features/matches/presentation/screens/home_screen.dart';
 
@@ -31,6 +32,12 @@ class Mundial2026App extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.system,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('es', 'EC'), Locale('en', 'US')],
       locale: const Locale('es', 'EC'),
       home: const HomeScreen(),
     );
