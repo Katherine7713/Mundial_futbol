@@ -70,24 +70,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final ancho = MediaQuery.of(context).size.width;
-    final esTablet = ancho >= 600;
-
     return Scaffold(
+      backgroundColor: const Color(0xFFE8F2F8),
       appBar: AppBar(
-        title: Text(
-          'Mundial 2026',
-          style: TextStyle(fontSize: esTablet ? 22 : 18),
+        title: const Text(
+          'World Cup 2026',
+          style: TextStyle(
+            fontSize: 20,
+            color: Color.fromARGB(255, 5, 139, 34),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-        toolbarHeight: esTablet ? 64 : 56,
+        backgroundColor: const Color(0xFF0C2B4D),
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.calendar_today),
-            tooltip: 'Seleccionar fecha',
+            icon: const Icon(Icons.calendar_month, color: Colors.white),
             onPressed: _openDatePicker,
           ),
         ],
@@ -102,42 +101,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                if (snapshot.hasError) {
+                if (snapshot.hasError)
                   return _ErrorView(error: snapshot.error.toString());
-                }
                 final matches = snapshot.data ?? [];
                 if (matches.isEmpty) return const _EmptyView();
 
-                // Tablet: grilla 2 columnas / Móvil: lista
-                return RefreshIndicator(
-                  onRefresh: () async => _load(_selectedDate),
-                  child: esTablet
-                      ? GridView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                                childAspectRatio: 1.6,
-                              ),
-                          itemCount: matches.length,
-                          itemBuilder: (_, i) => MatchCard(
-                            match: matches[i],
-                            onTap: () => _goToDetail(matches[i]),
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: const EdgeInsets.only(bottom: 16, top: 8),
-                          itemCount: matches.length,
-                          itemBuilder: (_, i) => MatchCard(
-                            match: matches[i],
-                            onTap: () => _goToDetail(matches[i]),
-                          ),
-                        ),
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  itemCount: matches.length,
+                  itemBuilder: (_, i) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: MatchCard(
+                      match: matches[i],
+                      onTap: () => _goToDetail(matches[i]),
+                    ),
+                  ),
                 );
               },
             ),
@@ -155,41 +136,33 @@ class _DateBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isToday = du.MundialUtils.sameDay(date, DateTime.now());
-    final esTablet = MediaQuery.of(context).size.width >= 600;
-
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(
-          horizontal: esTablet ? 32 : 20,
-          vertical: esTablet ? 14 : 12,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromARGB(255, 252, 224, 224).withOpacity(0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        color: Theme.of(context).colorScheme.primaryContainer,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.calendar_month,
-              size: esTablet ? 22 : 18,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
-            const SizedBox(width: 8),
+            // El icono ha sido removido
             Text(
-              isToday
-                  ? 'Hoy — ${du.MundialUtils.toDisplayDate(date)}'
-                  : du.MundialUtils.toDisplayDate(date),
-              style: TextStyle(
-                fontSize: esTablet ? 16 : 14,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              'HOY — ${du.MundialUtils.toDisplayDate(date).toUpperCase()}',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1B3A57),
               ),
-            ),
-            const SizedBox(width: 6),
-            Icon(
-              Icons.arrow_drop_down,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           ],
         ),
@@ -200,64 +173,20 @@ class _DateBar extends StatelessWidget {
 
 class _EmptyView extends StatelessWidget {
   const _EmptyView();
-
   @override
-  Widget build(BuildContext context) {
-    final esTablet = MediaQuery.of(context).size.width >= 600;
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.sports_soccer,
-            size: esTablet ? 96 : 64,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No hay partidos del Mundial\nen esta fecha',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontSize: esTablet ? 18 : 15,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => const Center(
+    child: Text(
+      'No hay partidos programados',
+      style: TextStyle(color: Colors.grey),
+    ),
+  );
 }
 
 class _ErrorView extends StatelessWidget {
   final String error;
   const _ErrorView({required this.error});
-
   @override
-  Widget build(BuildContext context) {
-    final esTablet = MediaQuery.of(context).size.width >= 600;
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(esTablet ? 48 : 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: esTablet ? 96 : 64,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: esTablet ? 16 : 14,
-                color: Theme.of(context).colorScheme.error,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Center(
+    child: Text(error, style: const TextStyle(color: Colors.red)),
+  );
 }

@@ -23,12 +23,20 @@ class Mundial2026App extends StatelessWidget {
           seedColor: const Color(0xFF8B1538),
           brightness: Brightness.light,
         ),
+        datePickerTheme: DatePickerThemeData(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+        ),
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF8B1538),
           brightness: Brightness.dark,
+        ),
+        datePickerTheme: DatePickerThemeData(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
         ),
       ),
       themeMode: ThemeMode.system,

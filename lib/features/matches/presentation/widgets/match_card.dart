@@ -15,6 +15,8 @@ class MatchCard extends StatelessWidget {
     final esTablet = ancho >= 600;
 
     return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
       margin: EdgeInsets.symmetric(
         horizontal: esTablet ? 32 : 16,
         vertical: 6,
@@ -63,7 +65,7 @@ class MatchCard extends StatelessWidget {
                               : theme.textTheme.headlineSmall)
                           ?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
+                        color: const Color(0xFF1B3A57),
                       ),
                     ),
                   ),
